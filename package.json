@@ -1,0 +1,23 @@
+{
+  "name": "why",
+  "version": "0.1.0",
+  "description": "generators and promises and callbacks, oh my",
+  "license": "MIT",
+  "keywords": [
+    "generator",
+    "async",
+    "flow control",
+    "promises",
+    "promise"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sciolist/why.git"
+  },
+  "dependencies": {
+    "q": "~0.9.6"
+  },
+  "devDependencies": {
+    "tap": "~0.4.3"
+  }
+}
