@@ -1,6 +1,6 @@
 var Q = require('q');
 
-module.exports = exports = function Y(opts) {
+module.exports = exports = function why(opts) {
   if(arguments.length === 0) {
     return exports.resume.apply(this, arguments);
   }
@@ -17,7 +17,7 @@ exports.done = function done() {
 }
 
 exports.create = function create(factory) {
-  return function wrapper() {
+  var wrapper = function wrapper() {
     var iterator = factory.apply(this, arguments);
     var promise = exports.run(iterator);
     
@@ -29,6 +29,10 @@ exports.create = function create(factory) {
     result.__proto__ = promise;
     return result;
   }
+  wrapper.toString = function() {
+    return 'why(' + factory.toString() + ')';
+  }
+  return wrapper;
 };
 
 exports.resume = function resume(throws) {
