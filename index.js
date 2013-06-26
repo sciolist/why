@@ -9,7 +9,7 @@ module.exports = exports = function why(opts) {
 
 exports.done = function done() {
   if(!exports.runningState || !exports.runningState.wrappedPromise) {
-    throw error('INVALID_STATE_FOR_DONE');
+    throw error.INVALID_STATE_FOR_DONE();
   }
   var wrapped = exports.runningState.wrappedPromise;
   delete exports.runningState.wrappedPromise;
@@ -65,7 +65,7 @@ exports.run = function run(iterator) {
   function next(verb, value) {
     function verify() {
       if(state.wrappedPromise !== undefined) {
-        throw error('UNUSED_CALLBACK');
+        throw error.UNUSED_CALLBACK();
       }
     }
 
@@ -103,23 +103,21 @@ exports.toPromise = function toPromise(value, raiseError) {
     if(Array.isArray(value)) { return Q.all(value.map(exports.toPromise)); }
   }
   if(raiseError === false) return;
-  throw error('TOPROMISE_FAILED');
+  throw error.TOPROMISE_FAILED();
 }
 
 function isPromise(v) { return v && v.then && v.then.call; }
 function isGenerator(v) { return v && Object.prototype.toString.call(v) === '[object Generator]'; }
 function isGeneratorFunction(v) { return v && v.constructor && v.constructor.name === 'GeneratorFunction'; }
 
-function error(code) {
-  var msg = "";
-  switch(code) {
-    case 'INVALID_STATE_FOR_DONE': msg = "Y.done can only be used right after wrapping a node-style callback!"; break;
-    case 'UNUSED_CALLBACK': msg = 'expected node-style callback did not occur!'; break;
-    case 'TOPROMISE_FAILED': msg = "yield value must be a generator, promise or an array of generators or promises."; break;
-    default: msg = "Unknown error"; break;
+error('INVALID_STATE_FOR_DONE', 'Y.done can only be used right after wrapping a node-style callback!');
+error('UNUSED_CALLBACK', 'expected node-style callback did not occur!');
+error('TOPROMISE_FAILED', 'yield value must be a generator, promise or an array of generators or promises.');
+function error(code, msg) {
+  error[code] = function() {
+    var err = new Error(msg + ' (WHY_' + code + ')');
+    err.code = 'WHY_' + code;
+    return err;
   }
-  var err = new Error(msg + ' (WHY_' + code + ')');
-  err.code = 'WHY_' + code;
-  return err;
 }
 
