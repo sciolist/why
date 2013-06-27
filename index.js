@@ -60,7 +60,7 @@ exports.run = function run(iterator) {
     , callback = next.bind(next, 'next')
     , errback  = next.bind(next, 'throw');
 
-  next('send');
+  next('next');
   return def.promise;
   function next(verb, value) {
     function verify() {
