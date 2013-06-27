@@ -57,7 +57,7 @@ exports.resume = function resume(throws) {
 exports.run = function run(iterator) {
   var def      = Q.defer()
     , state    = { wrappedPromise: undefined }
-    , callback = next.bind(next, 'send')
+    , callback = next.bind(next, 'next')
     , errback  = next.bind(next, 'throw');
 
   next('send');
