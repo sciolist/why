@@ -75,6 +75,9 @@ exports.run = function run(iterator) {
       exports.runningState = state;
       try {
         response = iterator[verb](value);
+        while (!response.done && response.value === 'cb') {
+          response = iterator[verb](exports());
+        }
       } finally {
         exports.runningState = oldState;
       }
