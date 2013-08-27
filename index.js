@@ -86,7 +86,7 @@ exports.run = function run(iterator) {
         return def.resolve(response.value);
       }
       var promised = exports.toPromise(response.value, false);
-      if(state.wrappedPromise !== undefined && promised === undefined) {
+      if(state.wrappedPromise !== undefined) {
         promised = state.wrappedPromise;
         state.wrappedPromise = undefined;
       }
