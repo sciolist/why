@@ -47,8 +47,8 @@ exports.resume = function resume(throws) {
   }
   return function(err, result) {
     if(throws === false) { result = err; err = null; }
-    if(err) return wrap.reject(err);
-    if(arguments.length === 2) return wrap.resolve(result);
+    if(err) { return wrap.reject(err); }
+    if(arguments.length === 2) { return wrap.resolve(result); }
     var args = Array.prototype.slice.call(arguments, 1);
     wrap.resolve(args);
   };
@@ -105,7 +105,7 @@ exports.toPromise = function toPromise(value, raiseError) {
     if(isGeneratorFunction(value)) { return exports.create(value)(); }
     if(Array.isArray(value)) { return Q.all(value.map(exports.toPromise)); }
   }
-  if(raiseError === false) return;
+  if(raiseError === false) return Q.resolve(value);
   throw error.TOPROMISE_FAILED();
 }
 
