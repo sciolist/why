@@ -22,9 +22,10 @@ exports.create = function create(factory) {
     var promise = exports.run(iterator);
     
     var result = function result(cb) {
-      promise
-        .fail(function(err) { cb(err); })
-        .then(function(v) { cb(null, v); });
+      promise.then(
+        function(val) { cb(null, val) },
+        function(err) { cb(err); }
+      );
     }
     result.__proto__ = promise;
     return result;
@@ -91,7 +92,7 @@ exports.run = function run(iterator) {
         state.wrappedPromise = undefined;
       }
       verify();
-      promised.then(callback).fail(errback);
+      promised.then(callback, errback);
     } catch(ex) {
       def.reject(ex);
     }
