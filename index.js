@@ -1,4 +1,4 @@
-var Q = require('q');
+var Q = require('kew');
 
 module.exports = exports = function why(opts) {
   if(arguments.length === 0) {
@@ -19,16 +19,7 @@ exports.done = function done() {
 exports.create = function create(factory) {
   var wrapper = function wrapper() {
     var iterator = factory.apply(this, arguments);
-    var promise = exports.run(iterator);
-    
-    var result = function result(cb) {
-      promise.then(
-        function(val) { cb(null, val) },
-        function(err) { cb(err); }
-      );
-    }
-    result.__proto__ = promise;
-    return result;
+    return exports.run(iterator);
   }
   wrapper.toString = function() {
     return 'why(' + factory.toString() + ')';
@@ -126,4 +117,5 @@ function error(code, msg) {
     return err;
   }
 }
+
 

@@ -1,6 +1,6 @@
 {
   "name": "why",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "generators and promises and callbacks, oh my",
   "license": "MIT",
   "keywords": [
@@ -15,7 +15,7 @@
     "url": "git://github.com/sciolist/why.git"
   },
   "dependencies": {
-    "q": "~0.9.6"
+    "kew": "~0.1.7"
   },
   "devDependencies": {
     "tap": "~0.4.3"
