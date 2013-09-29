@@ -1,4 +1,4 @@
-var Q = require('kew');
+var when = require('when');
 
 module.exports = exports = function why(opts) {
   if(arguments.length === 0) {
@@ -29,12 +29,12 @@ exports.create = function create(factory) {
 
 exports.resume = function resume(throws) {
   var state = exports.runningState;
-  var wrap = Q.defer(), old = state.wrappedPromise;
+  var wrap = when.defer(), old = state.wrappedPromise;
   if(!old) { state.wrappedPromise = wrap.promise; }
   else {
     var list = state.wrappedPromise.list || [state.wrappedPromise];
     list.push(wrap.promise);
-    state.wrappedPromise = Q.all(list);
+    state.wrappedPromise = when.all(list);
     state.wrappedPromise.list = list;
   }
   return function(err, result) {
@@ -47,7 +47,7 @@ exports.resume = function resume(throws) {
 }
 
 exports.run = function run(iterator) {
-  var def      = Q.defer()
+  var def      = when.defer()
     , state    = { wrappedPromise: undefined }
     , callback = next.bind(next, 'next')
     , errback  = next.bind(next, 'throw');
@@ -97,9 +97,9 @@ exports.toPromise = function toPromise(value, raiseError) {
     if(isPromise(value)) { return value; }
     if(isGenerator(value)) { return exports.run(value); }
     if(isGeneratorFunction(value)) { return exports.create(value)(); }
-    if(Array.isArray(value)) { return Q.all(value.map(exports.toPromise)); }
+    if(Array.isArray(value)) { return when.all(value.map(exports.toPromise)); }
   }
-  if(raiseError === false) return Q.resolve(value);
+  if(raiseError === false) return when.resolve(value);
   throw error.TOPROMISE_FAILED();
 }
 
