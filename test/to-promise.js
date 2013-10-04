@@ -1,15 +1,15 @@
 var test = require('tap').test;
 var Y = require('../');
-var Q = require('q');
+var when = require('when');
 
 
 test('Y.toPromise(promise) returns a promise', function(t) {
-  var promise = Q.resolve(42);
+  var promise = when.resolve(42);
   var value = Y.toPromise(promise);
   value.then(function(v) {
     t.equal(v, 42);
     t.end();
-  }).done();
+  });
 });
 
 
@@ -18,7 +18,7 @@ test('Y.toPromise(generatorFunction) returns a promise', function(t) {
   value.then(function(v) {
     t.equal(v, 42);
     t.end();
-  }).done();
+  });
 });
 
 
@@ -27,17 +27,17 @@ test('Y.toPromise(generator) returns a promise', function(t) {
   value.then(function(v) { 
     t.equal(v, 42);
     t.end();
-  }).done();
+  });
 });
 
 
 test('Y.toPromise(array) returns a promise', function(t) {
-  var promise = Q.resolve(40);
+  var promise = when.resolve(40);
   var value = Y.toPromise([promise, generator(1), generator], true);
   value.then(function(v) {
     t.similar(v, [40, 41, 42], 'array should return inner values in order.');
     t.end();
-  }).done();
+  });
 });
 
 
