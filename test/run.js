@@ -31,3 +31,11 @@ test('Y.run returns value to promise', function(t) {
   });
 });
 
+test('Y.run wrapped generators should be reusable', function(t) {
+  var fn1 = function*() {};
+  Y(function*() {
+    var wait = fn1();
+    yield [wait, wait];
+    t.end();
+  })().then(null, console.error);
+});

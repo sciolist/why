@@ -95,15 +95,21 @@ exports.run = function run(iterator) {
 exports.toPromise = function toPromise(value, raiseError) {
   if(value) {
     if(isPromise(value)) { return value; }
-    if(isGenerator(value)) { return exports.run(value); }
-    if(isGeneratorFunction(value)) { return exports.create(value)(); }
+    if(value.toPromise && value.toPromise instanceof Function) { return value.toPromise(); }
+    if(isGenerator(value)) { return exports.addPromise(value, exports.run(value)); }
+    if(isGeneratorFunction(value)) { return exports.addPromise(value, exports.create(value)); }
     if(Array.isArray(value)) { return when.all(value.map(exports.toPromise)); }
   }
   if(raiseError === false) return when.resolve(value);
   throw error.TOPROMISE_FAILED();
 }
 
-function isPromise(v) { return v && v.then && v.then.call; }
+exports.addPromise = function addPromise(value, promise) {
+  value.toPromise = function toPromise() { return promise; }
+  return promise;
+}
+
+function isPromise(v) { return v && v.then && v.then instanceof Function; }
 function isGenerator(v) { return v && Object.prototype.toString.call(v) === '[object Generator]'; }
 function isGeneratorFunction(v) { return v && v.constructor && v.constructor.name === 'GeneratorFunction'; }
 
