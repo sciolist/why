@@ -1,4 +1,5 @@
 var when = require('when');
+var slice = Array.prototype.slice;
 
 module.exports = exports = function why(opts) {
   if(arguments.length === 0) {
@@ -38,11 +39,11 @@ exports.resume = function resume(throws) {
     state.wrappedPromise.list = list;
   }
   return function(err, result) {
-    if(throws === false) { result = err; err = null; }
-    if(err) { return wrap.reject(err); }
-    if(arguments.length === 2) { return wrap.resolve(result); }
-    var args = Array.prototype.slice.call(arguments, 1);
-    wrap.resolve(args);
+    if(throws === false && arguments.length === 1) return wrap.resolve(err);
+    else if(throws === false) return wrap.resolve(slice.call(arguments));
+    else if(err) return wrap.reject(err);
+    else if(arguments.length < 3) return wrap.resolve(result);
+    else wrap.resolve(slice.call(arguments, 1));
   };
 }
 
